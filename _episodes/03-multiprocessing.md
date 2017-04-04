@@ -31,4 +31,4 @@ def main():
        p.map(download, links)
    print('Took {}s'.format(time() - ts))
 ~~~
-{; .python}
+{: .python}
