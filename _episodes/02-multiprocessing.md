@@ -55,5 +55,11 @@ if __name__ == '__main__':
 {: .challenge}
 
 This is true parallelism, but it comes with a cost. Creating new processes is a relatively expensive operation that requires system resources.
-Also, when a new process is created, it contains a copy of the entire memory of the script. In this simple example it isn’t a big deal, but it 
-can easily become serious overhead for non-trivial programs.
+Also, when a new process is created, it contains a *copy* of the entire memory of the script (note that these copies are *not* shared, they are
+separate memory spaces). In this simple example it isn’t a big deal, but it can easily become serious overhead for non-trivial programs.
+
+Although this approach works well for processes that can operate independently, it becomes a problem if the processes depend on each other in some
+way. For example, if each of the processes was required to perform computations on part of a single large data structure, but each required the 
+results of computations from the other processes in order to carry out their computation, then there would need to be some mechanism to share this 
+information. Techniques such as *shared memory* and *message passing* have been developed to solve these problems, and we will look at these in later
+lessons.
