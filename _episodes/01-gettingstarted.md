@@ -20,9 +20,9 @@ The `download_link` function downloads the image given by the URL `link` into th
 The `setup_download_dir` function creates a download destination directory if it doesn’t already exist.
 
 Imgur’s API requires HTTP requests to bear the “Authorization” header with the client ID. You can find this client ID from the dashboard of the 
-application that you have registered on Imgur, and the response will be JSON encoded. We can use Python’s standard JSON library to decode it.
+application that you have registered on Imgur. The response will be JSON encoded, and we can use Python’s standard JSON library to decode it.
 
-This is what the module looks like:
+This is what the `download.py` module looks like:
 
 ~~~
 import json

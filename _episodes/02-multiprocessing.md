@@ -14,9 +14,10 @@ However in order to do this, we would need to know what images are available so 
 that had already be downloaded by a different process. It would be more convenient if Python provided a simple way of managing these processes 
 rather than the user having to be concerned with how to start them. Fortunately the `multiprocessing` module is available for this purpose.
 
-To use multiple processes we create a multiprocessing `Pool`. The `Pool` class provides a `map` method that will run a function as a separate 
-process, passing arguments from a supplied iterable. We will pass the list of URLs to the pool, which in 
-turn will start 8 new processes and use each one to download the images in parallel. 
+To use multiple processes we create a multiprocessing [`Pool`](https://docs.python.org/2/library/multiprocessing.html#module-multiprocessing.pool). 
+The `Pool` class provides a `map` method that will run a function as a separate process, passing arguments from a supplied iterable. The iterable
+is divided into a number of chunks, so that each process gets roughly the same number of elements. We will pass the list of URLs to the pool, which 
+in turn will start 8 new processes and use each one to download the images in parallel. 
 
 ~~~
 from time import time
