@@ -1,10 +1,15 @@
 ---
 title: "Using Threads"
 teaching: 20
-exercises: 0
+exercises: 20
 questions:
+- "How can threads be used to improve the performance of our image downloader?"
 objectives:
+- "Learn about the Python `Thread` class."
+- "Learn about thread safety and the GIL."
 keypoints:
+- "Python provides a `threading` module to easily use threads."
+- "Although the GIL limits thread parallism, it is still useful to use threads in Python."
 ---
 Threading is another well known approach to attaining concurrency. Threading is a feature usually provided by the 
 operating system. Threads are typically lighter weight than processes, and they have much lower memory requirements as they share the same memory space.

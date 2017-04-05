@@ -1,10 +1,14 @@
 ---
 title: "Getting Started"
-teaching: 20
-exercises: 0
+teaching: 10
+exercises: 20
 questions:
+- "How do I create a simple sequential image downloader?"
 objectives:
+- "Create a simple image downloader that can be used for the basis of learning about concurrency."
 keypoints:
+- "Imgur provides a web API that allows images to be downloaded."
+- "You will need a login and to register an application to use Imgur."
 ---
 Let us start by creating a Python module, named `download.py`. This file will contain all the functions necessary to fetch the list of images and 
 download them. We will split the functionality into three separate functions:

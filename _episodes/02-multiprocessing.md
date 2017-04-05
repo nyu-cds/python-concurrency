@@ -1,10 +1,15 @@
 ---
 title: "Multiple Processes"
-teaching: 30
+teaching: 10
 exercises: 20
 questions:
+- "What is a simple way to improve the performance of our image downloader?"
 objectives:
+- "Learn about the Python `multiprocessing` module."
+- "Learn how to use the `Pool` class to manage multiple processes."
 keypoints:
+- "The `multiprocessing` module provides a rich set of features for manipluating processes."
+- "The `Pool` class is an easy way to provide work to groups of processes."
 ---
 One way to improve the performance of our image downloader would be to run multiple copies of the program at the same time. This works because
 most computers these days have multiple CPU cores, each of which can execute a copy of the program. Each of these *processes* is able to issue the download 
