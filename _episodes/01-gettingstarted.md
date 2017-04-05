@@ -86,7 +86,7 @@ if __name__ == '__main__':
 > ## Challenge
 >
 > Create the `download.py` and `simple.py` files using the programs provided above. Replace the string `'replace with your client ID'` in 
-> `simple.py` with the client ID you obtained from Imgur. Run the `simply.py` and verify that you obtain a number of images in the `images`
+> `simple.py` with the client ID you obtained from Imgur. Run `simple.py` and verify that you obtain a number of images in the `images`
 > directory. Note how long it takes to download these images.
 {: .challenge}
 

@@ -7,13 +7,15 @@ objectives:
 keypoints:
 ---
 One way to improve the performance of our image downloader would be to run multiple copies of the program at the same time. This works because
-most computers these days have multiple CPUs, each of which can execute a program. Each of these *processes* is able to issue the download 
+most computers these days have multiple CPU cores, each of which can execute a copy of the program. Each of these *processes* is able to issue the download 
 requests, and because these happen simultaneously, the overall image downloading proceeds much faster. 
 
-However it would be more convenient if Python provided a simple way of managing these processes rather than the user having to be concerned with
-how to start them. Fortunately the `multiprocessing` module is available for this purpose.
+However in order to do this, we would need to know what images are available so that we could ensure that one process didn't download an image
+that had already be downloaded by a different process. It would be more convenient if Python provided a simple way of managing these processes 
+rather than the user having to be concerned with how to start them. Fortunately the `multiprocessing` module is available for this purpose.
 
-To use multiple processes we create a multiprocessing `Pool`. With the `map` method it provides, we will pass the list of URLs to the pool, which in 
+To use multiple processes we create a multiprocessing `Pool`. The `Pool` class provides a `map` method that will run a function as a separate 
+process, passing arguments from a supplied iterable. We will pass the list of URLs to the pool, which in 
 turn will start 8 new processes and use each one to download the images in parallel. 
 
 ~~~
@@ -21,7 +23,9 @@ from time import time
 from functools import partial
 from multiprocessing.pool import Pool
 
-CLIENT_ID = 'replace with your client ID'
+from download import setup_download_dir, get_links, download_link
+
+CLIENT_ID = '763c8bbc5b1fbb7'
 
 def main():
    ts = time()
@@ -31,13 +35,16 @@ def main():
    with Pool(8) as p:
        p.map(download, links)
    print('Took {}s'.format(time() - ts))
+
+if __name__ == '__main__':
+   main()
 ~~~
 {: .python}
 
 > ## Challenge
 >
 > Create a `procs.py` file using the program provided above. Replace the string `'replace with your client ID'` in 
-> `procs.py` with the client ID you obtained from Imgur. Run the `procs.py` and verify that you obtain a number of images in the `images`
+> `procs.py` with the client ID you obtained from Imgur. Run `procs.py` and verify that you obtain a number of images in the `images`
 > directory. Compare how long it takes to download these images with the `simple.py` version.
 {: .challenge}
 

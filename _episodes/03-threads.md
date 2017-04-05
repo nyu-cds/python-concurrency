@@ -6,35 +6,38 @@ questions:
 objectives:
 keypoints:
 ---
-Discussions criticizing Python often talk about how it is difficult to use Python for multithreaded work, pointing fingers at what is known as the 
-global interpreter lock (affectionately referred to as the “GIL”) that prevents multiple threads of Python code from running simultaneously. 
-Due to this, the threading module doesn’t quite behave the way you would expect it to if you’re not a Python developer and you are coming 
-from other languages such as C++ or Java. It must be made clear that one can still write code in Python that runs concurrently or in parallel 
-and make a stark difference resulting performance, as long as certain things are taken into consideration. If you haven’t read it yet, I suggest 
-you take a look at Eqbal Quran’s [article on concurrency and parallelism](https://www.toptal.com/ruby/ruby-concurrency-and-parallelism-a-practical-primer)
-in Ruby here on the Toptal blog.
+Threading is another well known approaches to attaining concurrency and parallelism. Threading is a feature usually provided by the 
+operating system. Threads are typically lighter weight than processes, and they have much lower memory requirements as they share the same memory space.
 
+In this lesson, we will use Pyton threading to increase the performance of our image downloader. To do this, we will create a pool of 8 threads, making 
+a total of 9 threads including the main thread. The optimal number of threads is usually chosen based on factors such as other applications and 
+services running on the same machine. We will chose 8 worker threads because many personal computers have 8 CPU cores and one worker thread per 
+core seems like a good number for how many threads to run at once.
 
-Threading is one of the most well known approaches to attaining Python concurrency and parallelism. Threading is a feature usually provided by the 
-operating system. Threads are lighter than processes, and share the same memory space.
+The threaded version of the program is almost the same as `simple.py` with the exception that we now have a new class, `DownloadWorker`, that inherits 
+from the `Thread` class. This class provides a `run` method that should been overridden with a method that does the actual work of the thread.
 
-In our Python thread tutorial, we will write a new module to replace `single.py`. This module will create a pool of 8 threads, making a total of 9 
-threads including the main thread. I chose 8 worker threads, because my computer has 8 CPU cores and one worker thread per core seemed a good number 
-for how many threads to run at once. In practice, this number is chosen much more carefully based on other factors, such as other applications and 
-services running on the same machine.
+As mentioned earlier, each thread shares the same memory space. That is, the variables in the program are shared by all the threads and cannot be accessed
+the way you would normally access a variable. This is because the threads are executing simultaneously, and one thread may change the variable while
+another thread is reading it, or worse, two threads may try to update the variable at the same time. This is known as a *race condition*, and is one of
+the leading sources of errors in threaded programs. Instead, it is necessary to use special variables that allow multiple threads to access them
+similutaneously. These are known as *thread safe*.
 
-This is almost the same as the previous one, with the exception that we now have a new class, `DownloadWorker`, that inherits from the Thread class.
- The run method has been overridden, which runs an infinite loop. On every iteration, it calls `self.queue.get()` to try and fetch an URL to from a 
-thread-safe queue. It blocks until there is an item in the queue for the worker to process. Once the worker receives an item from the queue, it then 
-calls the same `download_link` method that was used in the previous script to download the image to the images directory. After the download is 
-finished, the worker signals the queue that that task is done. This is very important, because the Queue keeps track of how many tasks were enqueued. 
+In our case, we will provide the thread with a `run` method which downloads images in an infinite loop. We will use a thread-safe data structure known 
+as a `Queue` to keep track of the URLs that each thread will download. On every iteration, the thread will call `self.queue.get()` to try and fetch a
+URL to download. This call blocks until there is an item in the queue for the worker thread to process. Once the worker receives an item from the queue, 
+it then calls the same `download_link` method that was used in the previous script to download the image to the images directory. After the download is 
+finished, the worker signals the queue that that task is done. This is very important, because the `Queue` keeps track of how many tasks were enqueued. 
 The call to `queue.join()` would block the main thread forever if the workers did not signal that they completed a task.
 
 ~~~
+from time import time
 from queue import Queue
 from threading import Thread
 
-CLIENT_ID = #replace with your client id
+from download import setup_download_dir, get_links, download_link
+
+CLIENT_ID = 'replace with your client ID'
 
 class DownloadWorker(Thread):
    def __init__(self, queue):
@@ -51,7 +54,7 @@ class DownloadWorker(Thread):
 def main():
    ts = time()
    download_dir = setup_download_dir()
-   links = [l for l in get_links(CLIENT_ID) if l.endswith('.jpg')]
+   links = [l for l in get_links(CLIENT_ID)]
    # Create a queue to communicate with the worker threads
    queue = Queue()
    # Create 8 worker threads
@@ -62,15 +65,25 @@ def main():
        worker.start()
    # Put the tasks into the queue as a tuple
    for link in links:
-       logger.info('Queueing {}'.format(link))
+       print('Queueing {}'.format(link))
        queue.put((download_dir, link))
    # Causes the main thread to wait for the queue to finish processing all the tasks
    queue.join()
    print('Took {}'.format(time() - ts))
+
+if __name__ == '__main__':
+   main()
 ~~~
 {: .python}
 
-Running this script on the same machine used earlier results in a download time of 4.1 seconds! Thats 4.7 times faster than the previous example. 
+> ## Challenge
+>
+> Create a `threads.py` file using the program provided above. Replace the string `'replace with your client ID'` in 
+> `procs.py` with the client ID you obtained from Imgur. Run `threads.py` and verify that you obtain a number of images in the `images`
+> directory. Compare how long it takes to download these images with the `simple.py` and `procs.py` versions.
+{: .challenge}
+
+Running this script on the same machine used earlier results in a download time of 3.1 seconds! Thats 3 times faster than the `simple.py` example. 
 While this is much faster, it is worth mentioning that only one thread was executing at a time throughout this process due to the GIL. 
 Therefore, this code is concurrent but not parallel. The reason it is still faster is because this is an IO bound task. The processor is hardly 
 breaking a sweat while downloading these images, and the majority of the time is spent waiting for the network. This is why threading can provide 
