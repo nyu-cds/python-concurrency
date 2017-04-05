@@ -6,6 +6,15 @@ questions:
 objectives:
 keypoints:
 ---
+Discussions criticizing Python often talk about how it is difficult to use Python for multithreaded work, pointing fingers at what is known as the 
+global interpreter lock (affectionately referred to as the “GIL”) that prevents multiple threads of Python code from running simultaneously. 
+Due to this, the threading module doesn’t quite behave the way you would expect it to if you’re not a Python developer and you are coming 
+from other languages such as C++ or Java. It must be made clear that one can still write code in Python that runs concurrently or in parallel 
+and make a stark difference resulting performance, as long as certain things are taken into consideration. If you haven’t read it yet, I suggest 
+you take a look at Eqbal Quran’s [article on concurrency and parallelism](https://www.toptal.com/ruby/ruby-concurrency-and-parallelism-a-practical-primer)
+in Ruby here on the Toptal blog.
+
+
 Threading is one of the most well known approaches to attaining Python concurrency and parallelism. Threading is a feature usually provided by the 
 operating system. Threads are lighter than processes, and share the same memory space.
 

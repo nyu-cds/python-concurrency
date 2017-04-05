@@ -6,7 +6,7 @@
 carpentry: "swc"
 
 # Overall title for pages.
-title: "Python Multithreading"
+title: "Python Concurrency"
 
 # Contact.  This *must* include the protocol: if it's an email
 # address, it must look like "mailto:lessons@software-carpentry.org",
@@ -22,7 +22,7 @@ kind: "lesson"
 
 # Magic to make URLs resolve both locally and on GitHub.
 # See https://help.github.com/articles/repository-metadata-on-github-pages/.
-repository: nyu-cds/python-threading
+repository: nyu-cds/python-concurrency
 
 # Sites.
 amy_site: "https://amy.software-carpentry.org/workshops"
