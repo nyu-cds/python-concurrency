@@ -81,20 +81,30 @@ if __name__ == '__main__':
 > ## Challenge
 >
 > Create a `threads.py` file using the program provided above. Replace the string `'replace with your client ID'` in 
-> `procs.py` with the client ID you obtained from Imgur. Run `threads.py` and verify that you obtain a number of images in the `images`
+> `threads.py` with the client ID you obtained from Imgur. Run `threads.py` and verify that you obtain a number of images in the `images`
 > directory. Compare how long it takes to download these images with the `simple.py` and `procs.py` versions.
 {: .challenge}
 
-Running this script on the same machine used earlier results in a download time of 3.1 seconds! That is 3 times faster than the `simple.py` example. 
-While this is much faster, it is worth mentioning that only one thread was executing at a time throughout this process due to the GIL. 
-Therefore, this code is concurrent but not parallel. The reason it is still faster is because this is an IO bound task. The processor is hardly 
-breaking a sweat while downloading these images, and the majority of the time is spent waiting for the network. This is why threading can provide 
-a large speed increase. The processor can switch between the threads whenever one of them is ready to do some work. Using the threading module in 
-Python or any other interpreted language with a GIL can actually result in reduced performance. If your code is performing a CPU bound task, 
-such as decompressing gzip files, using the threading module will result in a slower execution time. For CPU bound tasks and truly parallel 
-execution, we can use the multiprocessing module.
+> ## Global Interpreter Lock (GIL)
+> In multithreading, a *lock* is a mechanism for preventing multiple threads from accessing the same shared variable simultaneously. This is to avoid
+> a race condition, as mentioned previously. CPython uses a global interpreter lock, otherwise known as GIL, to prevent the execution of multiple threads
+> at once in the Python interpreter. This prevents two threads from accidentially corrupting internal Python data structures. Although it sounds like this
+> would prevent multiple threads from being useful in Python, in practice there are still many operations that can still be done in parallel. One in
+> particular is performing input/output operations, such as accessing a web site.
+>
+> While the de facto reference Python implementation - CPython - has a GIL, this is not true of all Python implementations. For example, Jython, a 
+> Java implementation of Python, and IronPython, a Python implementation using the .NET framework both do not have a GIL. You can find a list of 
+> working Python implementations [here](https://wiki.python.org/moin/PythonImplementations#Working_Implementations).
+{: .callout}
 
-While the de facto reference Python implementation - CPython - has a GIL, this is not true of all Python implementations. For example, IronPython, a 
-Python implementation using the .NET framework does not have a GIL, and neither does Jython, the Java based implementation. You can find a list of 
-working Python implementations here.
+Running this script on the same machine used earlier results in a download time of 3.1 seconds! That is 3 times faster than the `simple.py` example. 
+
+While this is much faster, it is worth mentioning that only one thread was executing at a time throughout this process due to the GIL. 
+Therefore, this code is concurrent but not parallel. The reason it is still faster is because this is an input/output bound task. The processor is hardly 
+breaking a sweat while downloading these images, and the majority of the time is spent waiting for the network. This is why threading can provide 
+a large speed increase. The processor can switch between the threads whenever one of them is ready to do some work. 
+
+If the program was performing a task that was CPU bound, using the threading module in Python or any other interpreted language with a GIL could
+actually result in reduced performance. For CPU bound tasks and truly parallel execution in Python, the `multiprocessing` module is a better option.
+
 
