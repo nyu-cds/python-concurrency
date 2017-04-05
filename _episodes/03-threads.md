@@ -17,11 +17,13 @@ core seems like a good number for how many threads to run at once.
 The threaded version of the program is almost the same as `simple.py` with the exception that we now have a new class, `DownloadWorker`, that inherits 
 from the `Thread` class. This class provides a `run` method that should been overridden with a method that does the actual work of the thread.
 
-As mentioned earlier, each thread shares the same memory space. That is, the variables in the program are shared by all the threads and cannot be accessed
-the way you would normally access a variable. This is because the threads are executing simultaneously, and one thread may change the variable while
-another thread is reading it, or worse, two threads may try to update the variable at the same time. This is known as a *race condition*, and is one of
-the leading sources of errors in threaded programs. Instead, it is necessary to use special classes that allow multiple threads to access them
-similutaneously. These are known as *thread safe* classes.
+> ## Thread Safety
+> As mentioned earlier, each thread shares the same memory space. That is, the variables in the program are shared by all the threads and cannot be accessed
+> the way you would normally access a variable. This is because the threads are executing simultaneously, and one thread may change the variable while
+> another thread is reading it, or worse, two threads may try to update the variable at the same time. This is known as a *race condition*, and is one of
+> the leading sources of errors in threaded programs. Instead, it is necessary to use special classes that allow multiple threads to access them
+> similutaneously. These are known as *thread safe* classes.
+{: .callout}
 
 In our case, we will provide the thread with a `run` method which downloads images in an infinite loop. We will use a thread-safe data structure known 
 as a `Queue` to keep track of the URLs that each thread will download. On every iteration, the thread will call `self.queue.get()` to try and fetch a

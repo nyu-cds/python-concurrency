@@ -26,7 +26,7 @@ from multiprocessing.pool import Pool
 
 from download import setup_download_dir, get_links, download_link
 
-CLIENT_ID = '763c8bbc5b1fbb7'
+CLIENT_ID = 'replace with your client ID'
 
 def main():
    ts = time()
